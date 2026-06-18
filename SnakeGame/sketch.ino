@@ -2,6 +2,7 @@
 #include <Adafruit_SSD1306.h>
 
 #include "snake.h"
+#include "fruit.h"
 
 //wielkosc PIXELI
 #define ROZMIAR_PIX 3
@@ -13,14 +14,9 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 //init snake
 snake Snake;
 
-//init 3 pierwsze seg
-setSeg(Snake, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
-setSeg(Snake, 1, (SCREEN_HEIGHT / 2)-1, SCREEN_WIDTH / 2);
-setSeg(Snake, 1, (SCREEN_HEIGHT / 2)-2, SCREEN_WIDTH / 2);
-
 //fruit init
 fruit Fruit;
-setFruit(Fruit);
+
 
 //restart gry
 bool gameOver=false;
@@ -62,6 +58,13 @@ void setup() {
 
   //wyswietl
   display.display();
+
+  //init pozycji Snake i Fruit
+  setSeg(Snake, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
+  setSeg(Snake, 1, (SCREEN_HEIGHT / 2)-1, SCREEN_WIDTH / 2);
+  setSeg(Snake, 2, (SCREEN_HEIGHT / 2)-2, SCREEN_WIDTH / 2);
+  Snake.CurrLen=3;
+  setFruit(Fruit);
 }
 
 /**
@@ -93,7 +96,8 @@ void loop() {
   //przesun weza co repetetition
   if (millis() - lastTime > repet) { //millis() -> czas pracy
     lastTime = millis();
-    goSnake();
+    goSnake(Snake);
+    displSnake(Snake, Fruit);
   }
 
 //read - musi byc duzo czesciej niz repetetition
@@ -103,17 +107,19 @@ void loop() {
   delay(debounceDEL); //debounce 
   if (leftBut != righBut) {
     if(leftBut)
-      dir=changeDir(dir, true);
+      changeDir(Snake, true);
     else
-      dir=changeDir(dir, false);
+      changeDir(Snake, false);
 
   }
 
 //resetowanie po gameOver
   if (gameOver) {
-      display.clearDisplay();
-      heig=SCREEN_HEIGHT / 2; widt=SCREEN_WIDTH / 2;
-      gameOver=false;
+      setSeg(Snake, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
+      setSeg(Snake, 1, (SCREEN_HEIGHT / 2)-1, SCREEN_WIDTH / 2);
+      setSeg(Snake, 2, (SCREEN_HEIGHT / 2)-2, SCREEN_WIDTH / 2);
+      Snake.CurrLen=3;
+      setFruit(Fruit);
   }
 
 }

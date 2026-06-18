@@ -45,16 +45,12 @@ void changeDir (snake &Obj, bool ifRight);
 /**
  * @brief dodaj segment weza
  */
-void addSegm(snake &Obj, int aHei, int aWid) {
-    if(Obj.CurrLen<SnMAXsiz) {
-        for (int i = Obj.CurrLen; i > 0; i--) {
-            Obj.segs[i] = Obj.segs[i - 1];
-        }
-        Obj.segs[0].heig=aHei;
-        Obj.segs[0].widt=aWid;
-        Obj.CurrLen++;
-    }
-}
+void addSegm(snake &Obj, int aHei, int aWid);
+
+/**
+ * @brief przesun pola tablicy segmentow o 1
+ */
+void moveSnake(snake &Obj);
 
 
 /**
@@ -63,3 +59,9 @@ void addSegm(snake &Obj, int aHei, int aWid) {
  * @return if gameOver --tj. czy wyszedl poza ekran
  */
 bool goSnake (snake &Obj);
+
+/**
+ * @brief kolizja ze soba
+ * @return true dla kollizji -- game Over;
+ */
+bool selfColl (snake &Obj);

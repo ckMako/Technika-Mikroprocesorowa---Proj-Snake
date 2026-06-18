@@ -18,33 +18,32 @@ void changeDir (snake &Obj, bool ifRight) { //true -->right
     }
 }
 
-
+/**
+ * petle musza ustawiac nowy head i kopiowac wszystkie inne elem
+ */
 bool goSnake (snake &Obj) {
+    moveSnake(Obj);
 
   switch (Obj.dir*3) {
+
     case 12: //gora
     case 0 : //gora
-        for (int i = Obj.CurrLen; i > 0; i--) {
-            Obj.segs[i].heig--;
-        }
+        Obj.segs[0].heig--;
     //   heig--; //na OLED -- idzie w gore,
-      break;
+        break;
+
     case 3 : //prawo
-        for (int i = Obj.CurrLen; i > 0; i--) {
-            Obj.segs[i].widt++;
-        }
+        Obj.segs[0].widt++;
     //   widt++;
       break;
+
     case 6 :  //dol
-        for (int i = Obj.CurrLen; i > 0; i--) {
-            Obj.segs[i].heig++;
-        }
+        Obj.segs[0].heig++;
     //   heig++;
       break;
+
     case 9 : //prawo
-        for (int i = Obj.CurrLen; i > 0; i--) {
-            Obj.segs[i].widt--;
-        }
+        Obj.segs[0].widt--;
     //   widt--;
       break;
   }
@@ -58,4 +57,32 @@ bool goSnake (snake &Obj) {
     return false;
   }
     // displSnake(2);
+}
+
+void addSegm(snake &Obj, int aHei, int aWid) {
+    if(Obj.CurrLen<SnMAXsiz) {
+        for (int i = Obj.CurrLen; i > 0; i--) {
+            Obj.segs[i] = Obj.segs[i - 1];
+        }
+        Obj.segs[0].heig=aHei;
+        Obj.segs[0].widt=aWid;
+        Obj.CurrLen++;
+    }
+}
+
+void moveSnake(snake &Obj) {
+    if(Obj.CurrLen<SnMAXsiz) {
+        for (int i = Obj.CurrLen-1; i > 0; i--) {
+            Obj.segs[i] = Obj.segs[i - 1];
+        }
+    }
+}
+
+bool selfColl (snake &Obj){
+    for(int i =Obj.CurrLen; i>0; i--) {
+        if(Obj.segs[0].heig==Obj.segs[i].heig && Obj.segs[0].widt==Obj.segs[i].widt) {
+        return true;
+        }
+    }
+    return false;
 }
