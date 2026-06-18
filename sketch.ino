@@ -4,7 +4,49 @@
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
+#define MAXsize 10
+
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+//'stan' weza
+struct snakeSeg{
+  // int heig=SCREEN_HEIGHT / 2;
+  // int widt=SCREEN_WIDTH / 2; //pozycja weza
+  int heig=0;
+  int widt=0; //pozycja weza
+}; 
+
+struct snake{
+  snakeSeg segs[MAXsize];
+  int CurrLen=3;
+  int dir = 0; // 0 lub 4-gora, 1-prawo, 2-dol, 3-lewo
+};
+snake Snake;
+
+void setSeg(int arg, int heig, int widts) {
+  if(arg<MAXsize) {
+    Snake.segs[arg].heig=heig;
+    Snake.segs[arg].widt=widts;
+  }
+}
+
+setSeg(0, SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
+setSeg(1, (SCREEN_HEIGHT / 2)-1, SCREEN_WIDTH / 2);
+setSeg(1, (SCREEN_HEIGHT / 2)-2, SCREEN_WIDTH / 2);
+
+int fruiHei = 30, fruiWidt = 30;
+int padd=10;
+
+void setFruit () {
+  fruiHei=rand()%(SCREEN_HEIGHT-padd)+padd;
+  fruiWidt=rand()%(SCREEN_WIDTH-padd)+padd;
+}
+
+bool ateFruit() {
+  return (snake[0].widt==fruiWidt) && (sake[0].heig==fruiWidt);
+}
+
+
 
 void setup() {
   /**
@@ -41,9 +83,7 @@ bool gameOver=false;
 int repet = 50;
 int debounceDEL =25; //15-30
 
-//'stan' weza
-int heig=SCREEN_HEIGHT / 2, widt=SCREEN_WIDTH / 2; //pozycja weza
-int dir = 0; // 0 lub 4-gora, 1-prawo, 2-dol, 3-lewo
+
 
 /**
 wyswietl weza, size okrezla rozmiar kropki np 2x2
@@ -51,10 +91,16 @@ wyswietl weza, size okrezla rozmiar kropki np 2x2
 int displSnake (int siz) {
   display.clearDisplay();
   if (siz >1 && siz < 5)
-    display.fillRect(widt, heig, siz, siz, SSD1306_WHITE);
+    for(int i = 0; i<Snake.CurrLen; i++) {
+      display.fillRect(Snake.segs[i].widt, Snake.segs[i].heig, siz, siz, SSD1306_WHITE);
+    }
+    
   else
-    display.drawPixel(widt, heig, SSD1306_WHITE);
-
+    for(int i = 0; i<Snake.CurrLen; i++) {
+      display.drawPixel(elem.widt, elem.heig, SSD1306_WHITE);
+    }
+  //make fruit
+  display.drawPixel(fruiWidt, fruiHei, SSD1306_WHITE);
   display.display();
 }
 
@@ -75,6 +121,9 @@ przesun weza o 1
 */
 void goSnake () {
   //zmieniamy poz
+  for (int i = snake.CurrLen; i > 0; i--) {
+  tab[i] = tab[i - 1];
+}
   switch (dir*3) {
     case 12: //gora
     case 0 : //gora
@@ -96,6 +145,7 @@ void goSnake () {
   else if(widt>SCREEN_WIDTH || widt < 0)
     gameOver=true;
   else
+    if (snake.segs[0].heig== && snake.segs[0].widt==)
     displSnake(2);
 }
 
