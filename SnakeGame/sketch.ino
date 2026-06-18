@@ -20,6 +20,7 @@ fruit Fruit;
 
 //restart gry
 bool gameOver=false;
+bool victory = false;
 
 //odswiezanie i drganie stykow
 int repet = 50;
@@ -80,7 +81,7 @@ int displSnake (snake &oSnake, fruit &oFruit) {
         display.fillRect(oSnake.segs[i].widt, oSnake.segs[i].heig, ROZMIAR_PIX, ROZMIAR_PIX, SSD1306_WHITE);
     }
     //make fruit
-    display.fillRect(oFruit.widt, oFruit.heig, ROZMIAR_PIX, ROZMIAR_PIX, SSD1306_WHITE);
+    display.fillRect(oFruit.widt, oFruit.heig, ROZMIAR_PIX*2, ROZMIAR_PIX*2, SSD1306_WHITE);
 
     display.display();
 }
@@ -96,8 +97,9 @@ void loop() {
   //przesun weza co repetetition
   if (millis() - lastTime > repet) { //millis() -> czas pracy
     lastTime = millis();
-    goSnake(Snake);
+    gameOver=goSnake(Snake);
     displSnake(Snake, Fruit);
+    victory=ateFruit(Snake, Fruit);
   }
 
 //read - musi byc duzo czesciej niz repetetition
@@ -115,6 +117,15 @@ void loop() {
 
 //resetowanie po gameOver
   if (gameOver) {
+      setSeg(Snake, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
+      setSeg(Snake, 1, (SCREEN_HEIGHT / 2)-1, SCREEN_WIDTH / 2);
+      setSeg(Snake, 2, (SCREEN_HEIGHT / 2)-2, SCREEN_WIDTH / 2);
+      Snake.CurrLen=3;
+      setFruit(Fruit);
+  }
+
+//resetowanie po victory
+  if (victory) {
       setSeg(Snake, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
       setSeg(Snake, 1, (SCREEN_HEIGHT / 2)-1, SCREEN_WIDTH / 2);
       setSeg(Snake, 2, (SCREEN_HEIGHT / 2)-2, SCREEN_WIDTH / 2);

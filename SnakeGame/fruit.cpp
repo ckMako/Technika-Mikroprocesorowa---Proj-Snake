@@ -1,6 +1,6 @@
 #include "fruit.h"
 
-#include <stdlib.h>
+
 
 
 void setFruit (fruit &Obj) {
@@ -10,14 +10,16 @@ void setFruit (fruit &Obj) {
 }
 
 //bool?
-void ateFruit(snake &oSnake, fruit &oFruit) {
-    if((oSnake.segs[0].widt==oFruit.widt) &&  (oSnake.segs[0].heig==oFruit.heig)) {
+bool ateFruit(snake &oSnake, fruit &oFruit) {
+    if((oSnake.segs[0].widt <= oFruit.widt + oFruit.siz) && (oSnake.segs[0].widt >= oFruit.widt - oFruit.siz) ) {
+        if ((oSnake.segs[0].heig <= oFruit.heig + oFruit.siz) && (oSnake.segs[0].heig >= oFruit.heig - oFruit.siz)) {
         //jak zwiekszac rozmiar weza??
         oSnake.CurrLen++;
         if(oSnake.CurrLen >= SnMAXsiz) {
-            //VICTORY
+            return true;
         }
         setFruit(oFruit);
     }
-//   return;
+    }
+  return false;
 }
