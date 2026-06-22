@@ -57,6 +57,17 @@ void setup() {
 
   //zaczyna wyswietlanie
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.clearDisplay();
+
+  display.setTextSize(2);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(25, 5);
+  display.println("SNAKE");
+  display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // 'inverted' text
+  display.setCursor(20, 25);
+  display.println("The Game");
+  display.display();
+  delay(5000);
 
   //czysci pamiec OLED
   display.clearDisplay();
@@ -85,6 +96,10 @@ int displSnake (snake &oSnake, fruit &oFruit) {
 
     //clear display
     display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(SSD1306_WHITE);
+    display.setCursor(64, 5);
+    display.println(oSnake.CurrLen);
 
     //make snake segments
     for(int i = 0; i<oSnake.CurrLen; i++) {
@@ -122,7 +137,17 @@ void loop() {
 
 //resetowanie po gameOver
   if (gameOver) {
-
+        //print GAMEOVER
+        display.clearDisplay();
+        display.setTextSize(2);
+        display.setTextColor(SSD1306_WHITE);
+        display.setCursor(30, 5);
+        display.println("GAME");
+        display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // 'inverted' text
+        display.setCursor(30, 25);
+        display.println("OVER");
+        display.display();
+        delay(5000);
       //reset poz weza
       setSeg(Snake, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
       setSeg(Snake, 1, (SCREEN_HEIGHT / 2)-1, SCREEN_WIDTH / 2);
@@ -133,6 +158,14 @@ void loop() {
 
 //resetowanie po victory
   if (victory) {
+        //print VICTORY
+        display.clearDisplay();
+        display.setTextSize(1);
+        display.setTextColor(SSD1306_WHITE);
+        display.setCursor(30, 20);
+        display.println("Well done lad, the Beatles are all dead");
+        display.display();
+        delay(5000);
 
       //reset poz weza
       setSeg(Snake, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
