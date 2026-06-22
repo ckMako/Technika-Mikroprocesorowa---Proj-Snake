@@ -24,14 +24,14 @@ bool victory = false;
 
 //odswiezanie i drganie stykow
 int repet = 50;
-int debounceDEL =25; //15-30
+int debounceDEL =100; //15-30
 
 //obsluga czasu odswiezania snakea
 unsigned long lastTime = 0;
 
 //obsluga buttons
-bool leftBut=false;
-bool righBut=false;
+volatile bool leftBut=false; //volatile
+volatile bool righBut=false;
 
 void setup() {
   /**
@@ -50,8 +50,13 @@ void setup() {
   
   */
 
-  pinMode(11, INPUT_PULLUP); //lewo - domyslnie HIGH, inaczej nie dziala
-  pinMode(12, INPUT_PULLUP); //prawo
+  pinMode(2, INPUT_PULLUP); //lewo - domyslnie HIGH, inaczej nie dziala
+  pinMode(3, INPUT_PULLUP); //prawo
+
+  //interruption
+  //TYLKO PINY 2 i 3 OBSLUGUJA PRZERWANIA
+  attachInterrupt(digitalPinToInterrupt(2), interLEFT, FALLING);//lewo//falling -> czytamy LOW
+  attachInterrupt(digitalPinToInterrupt(3), interrRIGHT, FALLING); //prawo
 
   //zaczyna wyswietlanie
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
@@ -114,17 +119,17 @@ void loop() {
   }
 
 //read - musi byc duzo czesciej niz repetetition
-  leftBut=digitalRead(11);
-  delay(debounceDEL); //debounce 
-  righBut=digitalRead(12);
-  delay(debounceDEL); //debounce 
-  if (leftBut != righBut) {
-    if(leftBut)
-      changeDir(Snake, true);
-    else
-      changeDir(Snake, false);
+  // leftBut=digitalRead(11);
+  // delay(debounceDEL); //debounce 
+  // righBut=digitalRead(12);
+  // delay(debounceDEL); //debounce 
+  // if (leftBut != righBut) {
+  //   if(leftBut)
+  //     changeDir(Snake, true);
+  //   else
+  //     changeDir(Snake, false);
 
-  }
+  // }
 
 //resetowanie po gameOver
   if (gameOver) {
@@ -144,4 +149,25 @@ void loop() {
       setFruit(Fruit);
   }
 
+}
+
+void interLEFT() {
+  static unsigned long lastTime;
+  unsigned long timeNow = millis();
+  if (timeNow - lastTime < debounceDEL)
+    return;
+
+  changeDir(Snake, false);
+  lastTime = timeNow;
+}
+
+void interrRIGHT() {
+  static unsigned long lastTime;
+  unsigned long timeNow = millis();
+  if (timeNow - lastTime < debounceDEL)
+    return;
+
+  changeDir(Snake, true);
+  lastTime = timeNow;
+  
 }
