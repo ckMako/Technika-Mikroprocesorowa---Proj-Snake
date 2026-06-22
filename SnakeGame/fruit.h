@@ -25,4 +25,3 @@ void setFruit (fruit &Obj);
  */
 //bool?
 bool ateFruit(snake &oSnake, fruit &oFruit);
-

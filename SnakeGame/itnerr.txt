@@ -24,22 +24,22 @@ bool victory = false;
 
 //odswiezanie i drganie stykow
 int repet = 50;
-int debounceDEL =100; //15-30
+int debounceDEL =150; //15-30
 
 //obsluga czasu odswiezania snakea
 unsigned long lastTime = 0;
 
 //obsluga buttons
-volatile bool leftBut=false; //volatile
-volatile bool righBut=false;
+// volatile bool leftBut=false; //volatile
+// volatile bool righBut=false;
 
 void setup() {
   /**
   * OLED wpinamy do
   * SDA -> A4 //data
   * SCL -> A5 //clock
-  * 11 -> button left
-  * 12 -> button right
+  * 2 -> button left
+  * 3 -> button right
   */
 
   /*
@@ -152,22 +152,18 @@ void loop() {
 }
 
 void interLEFT() {
-  static unsigned long lastTime;
-  unsigned long timeNow = millis();
-  if (timeNow - lastTime < debounceDEL)
+  static unsigned long lastTimeLEFT;
+  if (millis() - lastTimeLEFT < debounceDEL)
     return;
-
   changeDir(Snake, false);
-  lastTime = timeNow;
+  lastTimeLEFT=millis();
 }
 
 void interrRIGHT() {
-  static unsigned long lastTime;
-  unsigned long timeNow = millis();
-  if (timeNow - lastTime < debounceDEL)
+  static unsigned long lastTimeRIGHT;
+  if (millis() - lastTimeRIGHT < debounceDEL)
     return;
 
   changeDir(Snake, true);
-  lastTime = timeNow;
-  
+  lastTimeRIGHT=millis();
 }
