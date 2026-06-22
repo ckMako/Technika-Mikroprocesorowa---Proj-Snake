@@ -39,13 +39,6 @@ void setup() {
   * 3 -> button right
   */
 
-  /*
-  display score
-  display victory or loose
-  check collision with yourself+
-  interruption+
-  
-  */
 
   pinMode(2, INPUT_PULLUP); //lewo - domyslnie HIGH, inaczej nie dziala
   pinMode(3, INPUT_PULLUP); //prawo
@@ -154,16 +147,17 @@ void loop() {
       setSeg(Snake, 2, (SCREEN_HEIGHT / 2)-2, SCREEN_WIDTH / 2);
       Snake.CurrLen=3;
       setFruit(Fruit);
+      gameOver=false;
   }
 
 //resetowanie po victory
   if (victory) {
         //print VICTORY
         display.clearDisplay();
-        display.setTextSize(1);
+        display.setTextSize(2);
         display.setTextColor(SSD1306_WHITE);
         display.setCursor(30, 20);
-        display.println("Well done lad, the Beatles are all dead");
+        display.println("VICTORY!!!");
         display.display();
         delay(5000);
 
@@ -173,6 +167,7 @@ void loop() {
       setSeg(Snake, 2, (SCREEN_HEIGHT / 2)-2, SCREEN_WIDTH / 2);
       Snake.CurrLen=3;
       setFruit(Fruit);
+      victory=false;
   }
 
 }
