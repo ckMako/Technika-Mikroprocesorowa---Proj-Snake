@@ -42,6 +42,14 @@ void setup() {
   * 12 -> button right
   */
 
+  /*
+  display score
+  display victory or loose
+  check collision with yourself
+  interruption
+  
+  */
+
   pinMode(11, INPUT_PULLUP); //lewo - domyslnie HIGH, inaczej nie dziala
   pinMode(12, INPUT_PULLUP); //prawo
 
@@ -98,6 +106,9 @@ void loop() {
   if (millis() - lastTime > repet) { //millis() -> czas pracy
     lastTime = millis();
     gameOver=goSnake(Snake);
+    if(!gameOver) {
+      gameOver=selfColl(Snake);
+    }
     displSnake(Snake, Fruit);
     victory=ateFruit(Snake, Fruit);
   }

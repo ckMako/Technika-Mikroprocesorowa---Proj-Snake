@@ -79,9 +79,11 @@ void moveSnake(snake &Obj) {
 }
 
 bool selfColl (snake &Obj){
-    for(int i =Obj.CurrLen; i>0; i--) {
-        if(Obj.segs[0].heig==Obj.segs[i].heig && Obj.segs[0].widt==Obj.segs[i].widt) {
-        return true;
+    for(int i=1; i<Obj.CurrLen-1; i++) {
+        if(Obj.segs[0].heig==Obj.segs[i].heig ) {
+            if(Obj.segs[0].widt==Obj.segs[i].widt) {
+                        return true;
+            }
         }
     }
     return false;

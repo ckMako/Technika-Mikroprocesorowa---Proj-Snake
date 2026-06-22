@@ -24,5 +24,5 @@ void setFruit (fruit &Obj);
  * @brief zwieksz rozmiar weza jezeli zje owoc
  */
 //bool?
-void ateFruit(snake &oSnake, fruit &oFruit);
+bool ateFruit(snake &oSnake, fruit &oFruit);
 

@@ -63,5 +63,6 @@ bool goSnake (snake &Obj);
 /**
  * @brief kolizja ze soba
  * @return true dla kollizji -- game Over;
+ * @details najpierw dla każdego elementu porównujemy wysokośc, zamiast wys && szer, dzięki temu możemy odciąć połowę operacji od razu -- szybsze przetwarzanie
  */
 bool selfColl (snake &Obj);
