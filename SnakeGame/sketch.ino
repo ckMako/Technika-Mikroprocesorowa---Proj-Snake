@@ -24,34 +24,36 @@ bool victory = false;
 
 //odswiezanie i drganie stykow
 int repet = 50;
-int debounceDEL =25; //15-30
+int debounceDEL =150; //15-30
 
 //obsluga czasu odswiezania snakea
 unsigned long lastTime = 0;
 
-//obsluga buttons
-bool leftBut=false;
-bool righBut=false;
 
 void setup() {
   /**
   * OLED wpinamy do
   * SDA -> A4 //data
   * SCL -> A5 //clock
-  * 11 -> button left
-  * 12 -> button right
+  * 2 -> button left
+  * 3 -> button right
   */
 
   /*
   display score
   display victory or loose
   check collision with yourself+
-  interruption
+  interruption+
   
   */
 
-  pinMode(11, INPUT_PULLUP); //lewo - domyslnie HIGH, inaczej nie dziala
-  pinMode(12, INPUT_PULLUP); //prawo
+  pinMode(2, INPUT_PULLUP); //lewo - domyslnie HIGH, inaczej nie dziala
+  pinMode(3, INPUT_PULLUP); //prawo
+
+  //interruption
+  //TYLKO PINY 2 i 3 OBSLUGUJA PRZERWANIA
+  attachInterrupt(digitalPinToInterrupt(2), interLEFT, FALLING);//lewo//falling -> czytamy LOW
+  attachInterrupt(digitalPinToInterrupt(3), interrRIGHT, FALLING); //prawo
 
   //zaczyna wyswietlanie
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
@@ -105,7 +107,11 @@ void loop() {
   //przesun weza co repetetition
   if (millis() - lastTime > repet) { //millis() -> czas pracy
     lastTime = millis();
+
+    //czy wyszedl poza ekran
     gameOver=goSnake(Snake);
+
+    //czy zderzyl sie ze soba
     if(!gameOver) {
       gameOver=selfColl(Snake);
     }
@@ -113,21 +119,11 @@ void loop() {
     victory=ateFruit(Snake, Fruit);
   }
 
-//read - musi byc duzo czesciej niz repetetition
-  leftBut=digitalRead(11);
-  delay(debounceDEL); //debounce 
-  righBut=digitalRead(12);
-  delay(debounceDEL); //debounce 
-  if (leftBut != righBut) {
-    if(leftBut)
-      changeDir(Snake, true);
-    else
-      changeDir(Snake, false);
-
-  }
 
 //resetowanie po gameOver
   if (gameOver) {
+
+      //reset poz weza
       setSeg(Snake, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
       setSeg(Snake, 1, (SCREEN_HEIGHT / 2)-1, SCREEN_WIDTH / 2);
       setSeg(Snake, 2, (SCREEN_HEIGHT / 2)-2, SCREEN_WIDTH / 2);
@@ -137,6 +133,8 @@ void loop() {
 
 //resetowanie po victory
   if (victory) {
+
+      //reset poz weza
       setSeg(Snake, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
       setSeg(Snake, 1, (SCREEN_HEIGHT / 2)-1, SCREEN_WIDTH / 2);
       setSeg(Snake, 2, (SCREEN_HEIGHT / 2)-2, SCREEN_WIDTH / 2);
@@ -145,3 +143,30 @@ void loop() {
   }
 
 }
+
+/**
+ * @brief przerwanie LEWE
+ * @details po przerwaniu zmienia kieruneka na lewo
+ * zmienna debounce określa co ile czytamy -- redukcja drgania stykow
+ */
+void interLEFT() {
+  static unsigned long lastTimeLEFT;
+  if (millis() - lastTimeLEFT < debounceDEL)
+    return;
+  changeDir(Snake, false);
+  lastTimeLEFT=millis();
+}
+
+/**
+ * @brief przerwanie PRAWE
+ * analogicznie
+ */
+void interrRIGHT() {
+  static unsigned long lastTimeRIGHT;
+  if (millis() - lastTimeRIGHT < debounceDEL)
+    return;
+
+  changeDir(Snake, true);
+  lastTimeRIGHT=millis();
+}
+
